@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style for table header cells */
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        /* Alternate row colors for better readability */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style for table cells */
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+     body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #003366;
+            overflow: hidden;
+        }
+        li {
+            float: left;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #4CAF50;
+        }
+        p {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #FF3333;
+            text-align: center;
+        }
+</style>
+
+<head>
+    <!-- Add CSS styles here -->
+</head>
+
+<body>
+    <ul>
+        <li><a href="/readfile">Monitoring System Dashboard</a></li>
+    </ul>
+    <h1 style="text-align: center;">Energy Consumption</h1>
+
+    <table>
+        <tr>
+            {% for column in data[0] %}
+                <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in filtered_data[0:] %}
+            <tr>
+                {% for value in row %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+<div id="plotly-plot"></div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Wrap the Plotly initialization code in a function
+    function createPlot() {
+        var plot_data = {{ plot_json | tojson }};
+        console.log('Plot Data:', typeof(plot_data));
+        var JSONData = JSON.parse(plot_data);
+        console.log('Plot JSONData:', typeof(JSONData));
+        console.log('Plot JSONData:', JSONData.data);
+
+        try {
+            Plotly.newPlot('plotly-plot', JSONData.data, JSONData.layout);
+        } catch (error) {
+            console.error('Error in Plotly:', error);
+        }
+    }
+
+    // Ensure the DOM is fully loaded before creating the plot
+    window.addEventListener('load', createPlot);
+</script>
+
+
+
+</body>
+
+</html>

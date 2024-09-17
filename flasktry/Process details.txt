@@ -1,0 +1,2 @@
+link - http://127.0.0.1/energy_data_esp
+{"Id": 27, "Home Number": "B21", "Reading" : 126, "Status": "Up"}

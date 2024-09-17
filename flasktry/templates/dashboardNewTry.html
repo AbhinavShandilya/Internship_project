@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #4CAF50;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            padding: 20px;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .pie-chart {
+            width: 100%;
+            height: 500px;
+        }
+        .form-container {
+            margin-bottom: 20px; /* Adjust the value as needed */
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Dashboard</h1>
+</header>
+
+<nav>
+    <a href="/">Home</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>File Details</h2>
+        <p><strong>File Name:</strong> {{ selected_file }}</p>
+        <a href="/download_file?selected_file={{ selected_file }}" download>Download File</a>
+        <h2>Filter Data</h2>
+        <div class="form-container">
+            <form method="get" action="/dashboardWeb/byId" onsubmit="return validateForm()">
+                <label for="id-select">Home Id:</label>
+                <select name="id" id="id-select">
+                    <option value="" disabled selected>-- All --</option>
+                    {% for id in unique_ids %}
+                        <option value="{{ id }}">{{ id }}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="selected_file" value="{{ selected_file }}">
+                <input type="submit" value="Filter" style="background-color: blue; color: white;">
+            </form>
+        </div>
+
+        <div class="form-container">
+            <form method="get" action="/dashboardWeb/byId" onsubmit="return validateFormHomeNumber()">
+                <label for="home-select">Home Number:</label>
+                <select name="homeid" id="home-select">
+                    <option value="" disabled selected>-- All --</option>
+                    {% for homenumber in unique_home_number %}
+                        <option value="{{ homenumber }}">{{ homenumber }}</option>
+                    {% endfor %}
+                    <!-- Add more options as needed -->
+                </select>
+                 <input type="hidden" name="selected_file" value="{{ selected_file }}">
+                <input type="submit" value="Filter" style="background-color: blue; color: white;">
+            </form>
+        </div>
+
+        <div class="form-container">
+            <form method="get" action="/dashboardWeb/byId" onsubmit="return validateFormStatus()">
+                <label for="status-select">Status:</label>
+                <select name="status" id="status-select">
+                    <option value="" disabled selected>-- All --</option>
+                    {% for status in unique_status %}
+                        <option value="{{ status }}">{{ status }}</option>
+                    {% endfor %}
+                    <!-- Add more options as needed -->
+                </select>
+                 <input type="hidden" name="selected_file" value="{{ selected_file }}">
+                <input type="submit" value="Filter" style="background-color: blue; color: white;">
+            </form>
+        </div>
+
+
+    </div>
+
+
+    <div class="card">
+        <h2>Under Development</h2>
+        <div id="pie-chart" class="pie-chart"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card" style="grid-column: span 3;">
+        <h2>Data Table</h2>
+        <table>
+            <tr>
+                {% for column in data[0] %}
+                    <th style = "color: green;">{{ column }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in data[1:] %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var selectedId = document.getElementById("id-select").value;
+        if (selectedId === "") {
+            alert("Please select an ID other than '-- All --'");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+
+    //Function to validate status
+    function validateFormStatus(){
+        var selectedId = document.getElementById("status-select").value;
+        if (selectedId === "") {
+            alert("Please select Status other than '-- All --'");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+
+    function validateFormHomeNumber(){
+        var selectedId = document.getElementById("home-select").value;
+        if (selectedId === "") {
+            alert("Please select Home Number other than '-- All --'");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+
+
+    // Function to generate a pie chart
+    function generatePieChart(data) {
+        var trace = {
+            values: data.values,
+            labels: data.labels,
+            type: 'pie'
+        };
+
+        var layout = {
+            height: 500,
+            width: '100%'
+        };
+
+        var config = {
+            responsive: true
+        };
+
+        Plotly.newPlot('pie-chart', [trace], layout, config);
+    }
+
+    // Example data for testing
+    var testData = {
+        labels: ['Label 1', 'Label 2', 'Label 3'],
+        values: [10, 20, 30]
+    };
+
+    // Call the function to generate the pie chart with test data
+    generatePieChart(testData); // Replace testData with actual data from Flask
+</script>
+
+</body>
+</html>

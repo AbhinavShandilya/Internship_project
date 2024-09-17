@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBRI Energy Monitoring System</title>
+    <style>
+        /* Add your CSS styles to make the page stylish here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #003366;
+            overflow: hidden;
+        }
+        li {
+            float: left;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #4CAF50;
+        }
+        p {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 10px;
+            color: #1c626e;
+        }
+        /* Additional style for the image */
+        .homepage-image {
+            display: block;
+            margin: 0 auto; /* Center the image */
+            width: 100%; /* Cover the whole page width */
+            max-height: 600px;
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a href="/readfile">Monitoring System Dashboard</a></li>
+        <li><a href="https://cbri.res.in/">CBRI Home</a> </li>
+    </ul>
+    <p>Monitoring System for CBRI Colony</p>
+    <p>Welcome to CBRI Energy Page</p>
+    <!-- Image -->
+    <img src="{{ url_for('static', filename='cbri.jpg') }}" alt="Homepage Image" class="homepage-image">
+
+    <!-- Introductory text -->
+
+</body>
+<footer style="background-color: #FAEBD7; padding: 10px;">
+    <!-- Your website's footer content -->
+    <p>&copy; 2023, CSIR - Central Building Research Institute, Roorkee</p>
+</footer>
+</html>

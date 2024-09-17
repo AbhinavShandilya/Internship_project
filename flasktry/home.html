@@ -1,0 +1,27 @@
+<form action="/predict_energy" method="post" id="energyForm">
+    <label for="hour">Hour:</label>
+    <input type="number" id="hour" name="hour" required><br>
+
+    <label for="temperature">Temperature:</label>
+    <input type="number" id="temperature" name="temperature" required><br>
+
+    <label for="humidity">Humidity:</label>
+    <input type="number" id="humidity" name="humidity" required><br>
+
+    <input type="submit" value="Predict">
+</form>
+
+<script>
+    document.getElementById('energyForm').onsubmit = function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/predict_energy', {
+            method: 'POST',
+            body: JSON.stringify(Object.fromEntries(formData)),
+            headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+          .then(data => alert('Predicted energy: ' + data.predicted_reading + ' kWh'))
+          .catch(error => console.error('Error:', error));
+    };
+</script>

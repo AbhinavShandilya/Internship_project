@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<style>
+    <!--
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    -->
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style for table header cells */
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        /* Alternate row colors for better readability */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style for table cells */
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        h1 {
+            color: #FF3333;
+            text-align: center;
+        }
+
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #003366;
+            overflow: hidden;
+        }
+        li {
+            float: left;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #4CAF50;
+        }
+        p {
+            text-align: left;
+            font-size: 15px;
+            margin-top: 10px;
+            color: #8B0A50;
+        }
+        p,
+    a {
+        display: inline; /* Make both elements display inline */
+        vertical-align: middle; /* Align elements vertically */
+        margin-right: 20px; /* Add space between elements */
+    }
+</style>
+
+
+<head>
+    <!-- Add CSS styles here -->
+</head>
+<body>
+    <ul>
+        <li><a href="/">Home</a></li>
+    </ul>
+    <h1>Dashboard</h1>
+<p>File Name: {{ selected_file }} </p>
+    <a href="/download_file?selected_file={{ selected_file }}" download>Download File</a>
+
+    <form method="get" action="/dashboardWeb/byId" onsubmit="return validateForm()">
+        <label for="id-select">Select Id:</label>
+        <select name="id" id="id-select">
+            <option value="" disabled selected>-- All --</option>
+            {% for id in unique_ids %}
+                <option value="{{ id }}">{{ id }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="selected_file" value="{{ selected_file }}">
+        <input type="submit" value="Filter Data" style="background-color: blue; color: white;">
+
+    </form>
+
+    <table>
+            <tr>
+           {% for column in data[0] %}
+               <th style = "color: green;">{{ column }}</th>
+           {% endfor %}
+       </tr>
+       {% for row in data[1:] %}
+           <tr>
+               {% for value in row %}
+                   <td>{{ value }}</td>
+               {% endfor %}
+           </tr>
+       {% endfor %}
+    </table>
+
+
+<script>
+        function validateForm() {
+            var selectedId = document.getElementById("id-select").value;
+            if (selectedId === "") {
+                alert("Please select an ID other than '-- All --'");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
+
+
+    </script>
+</body>
+</html>
